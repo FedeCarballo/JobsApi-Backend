@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema({
         required:[true, 'Please provide Password'],
         minlength: 6,
     },
+    hasCV:{
+        type: Boolean,
+        default:false,
+    },
+    hasPhoto:{
+        type:String,
+        default: 'https://i.ibb.co/gyyPJsD/3700-3-04.jpg'
+    }
 })
 
 //Realizamos el encriptado de la contraseña para no enviarlo en formato de string
