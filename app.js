@@ -17,6 +17,7 @@ const authUser = require('./middleware/authentication')
 
 const AuthRouter = require('./routes/auth')
 const JobsRouter = require('./routes/jobs')
+const CurriculumRouter = require('./routes/curriculum')
 
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
@@ -37,6 +38,8 @@ app.use(xss())
 // routes
 app.use('/api/v1/auth', AuthRouter)
 app.use('/api/v1/jobs', authUser, JobsRouter)
+app.use('/api/v1/extras/curriculum',CurriculumRouter)
+
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
