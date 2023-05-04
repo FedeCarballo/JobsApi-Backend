@@ -5,9 +5,7 @@ const multerUpload = multer({
     storage: multer.diskStorage({
         destination:'./uploads',
         filename: (req,file,cb) => {
-            const extension = extname(file.originalname)
-            const name = file.originalname.split(extension)[0]
-            cb(null, `${name}-${Date.now()}${extension}`)
+            cb(null, String(Date.now()), + ' - ' + file.originalname)
         }
     }),
     fileFilter: (req,file,cb) =>{
