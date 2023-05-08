@@ -33,6 +33,7 @@ app.use(express.json());
 app.use(helmet())
 app.use(cors())
 app.use(xss())
+app.use(express.urlencoded({extended: false}));
 // extra packages
 
 // routes
@@ -50,7 +51,8 @@ const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI)
     app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`)
+      console.log(`Server is listening on port ${port}...`),
+
     );
   } catch (error) {
     console.log(error);
