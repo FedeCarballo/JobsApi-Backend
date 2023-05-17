@@ -5,10 +5,10 @@ const {StatusCodes} = require('http-status-codes')
 const {BadRequestError, NotFoundError} = require('../errors')
 const {GridFSBucket, ObjectID } = require('mongodb')
 const mongoose = require('mongoose')
-// GetCV,
-// CreateCV,
+// GetCV, x
+// CreateCV, x 
 // UpdateCV,
-// DeleteCV
+// DeleteCV 
 
 
 const GetCV = async (req,res) => {
@@ -16,11 +16,13 @@ const GetCV = async (req,res) => {
         bucketName: 'pdfs'
     })
     const fileId = new ObjectID(req.params.fileId);
-    if (!fileId || fileId.length === 0) {
-        return res.status(404).json({ message: 'No se encontró el archivo PDF' });
-      }
+    const find = await Curriculum.findOne({
+      file: fileId
+    })
+    if(!find){
+      throw new NotFoundError(`No se encontro el Curriculum solicitado`)
+    }
     else{
-        console.log(fileId);
         const downloadStream = bucket.openDownloadStream(fileId);
         downloadStream.on('file', file => {
             const contentType = mime.contentType(file.filename);
@@ -29,6 +31,7 @@ const GetCV = async (req,res) => {
           downloadStream.pipe(res);
     }
 }
+
 const CreateCV = async (req,res) => {
     const { title, description } = req.body
     const buffer = req.file.buffer 
@@ -52,7 +55,32 @@ const CreateCV = async (req,res) => {
     res.send('Archivo PDF cargado con éxito')})
 }
 
+const DeleteCurriculum = async(req,res) => {
+  const fileId = new ObjectID(req.params.fileId);
+  const curriculum = await Curriculum.findOneAndDelete({
+    file: fileId
+  })
+  const bucket = new GridFSBucket(mongoose.connection.db, {
+    bucketName: 'pdfs'
+})
+if (!curriculum){
+  throw new NotFoundError(`No se encontro curriculum con el ID: ${fileId}`)
+}
+console.log(curriculum);
+  bucket.delete(fileId, err =>{
+    if(err) {
+      return res.status(500).json({message: "Error al borrar el archivo PDF, por favor vuelva a intentarlo"})
+    }
+    res.status(StatusCodes.OK).json({message: "PDF borrado exitosamente"})
+  })
+}
+
+const UpdateCurriculum = async (req,res) => {
+
+}
 module.exports = {
     CreateCV,
-    GetCV
+    GetCV,
+    DeleteCurriculum,
+    UpdateCurriculum
 }
