@@ -63,6 +63,7 @@ const DeleteCurriculum = async(req,res) => {
   const bucket = new GridFSBucket(mongoose.connection.db, {
     bucketName: 'pdfs'
 })
+console.log(bucket);
 if (!curriculum){
   throw new NotFoundError(`No se encontro curriculum con el ID: ${fileId}`)
 }
