@@ -3,10 +3,21 @@ const {StatusCodes} = require('http-status-codes')
 const {BadRequestError, NotFoundError} = require('../errors')
 
 const CreateLetter = async (req,res) =>{
-
+    req.body.createdBy = req.body.userId
+    
+    const letter = await Letter.create(req.body)
+    res.status(StatusCodes.CREATED).json({Letter})
 }
 const GetLetter = async(req,res) => {
-
+    const {user:{userId},params:{id:LetterId}} = req
+    const letter = await Letter.findOne({
+        _id : LetterId, 
+        createdBy:userId 
+    })
+    if(!letter){
+        throw new NotFoundError(`Not job with ${JobId}`)
+    }
+    res.status(StatusCodes.OK).json({letter})
 }
 
 const UpdateLetter = async (req,res) => {
