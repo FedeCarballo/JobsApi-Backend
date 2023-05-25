@@ -2,22 +2,20 @@ const Curriculum = require('../models/Curriculum')
 const { Readable } = require('stream');
 const mime = require('mime-types');
 const {StatusCodes} = require('http-status-codes')
-const {BadRequestError, NotFoundError} = require('../errors')
+const {NotFoundError} = require('../errors')
 const {GridFSBucket, ObjectID } = require('mongodb')
 const mongoose = require('mongoose')
-// GetCV, x
-// CreateCV, x 
-// UpdateCV,
-// DeleteCV 
 
 
 const GetCV = async (req,res) => {
+    const {user:{userId}} = req
     const bucket = new GridFSBucket(mongoose.connection.db, {
         bucketName: 'pdfs'
     })
     const fileId = new ObjectID(req.params.fileId);
     const find = await Curriculum.findOne({
-      file: fileId
+      file: fileId,
+      createdBy:userId 
     })
     if(!find){
       throw new NotFoundError(`No se encontro el Curriculum solicitado`)
@@ -34,6 +32,8 @@ const GetCV = async (req,res) => {
 
 const CreateCV = async (req,res) => {
     const { title, description } = req.body
+    req.body.createdBy = req.user.userId
+    console.log(req.body);
     const buffer = req.file.buffer 
     const bucket = new GridFSBucket(mongoose.connection.db, {
         bucketName: 'pdfs'
@@ -48,6 +48,7 @@ const CreateCV = async (req,res) => {
     const pdf = new Curriculum({
       title,
       description,
+      createdBy: req.body.createdBy,
       file: uploadStream.id
     });
 
@@ -56,9 +57,11 @@ const CreateCV = async (req,res) => {
 }
 
 const DeleteCurriculum = async(req,res) => {
+  const {user:{userId}} = req
   const fileId = new ObjectID(req.params.fileId);
   const curriculum = await Curriculum.findOneAndDelete({
-    file: fileId
+    file: fileId,
+    createdBy: userId,
   })
   const bucket = new GridFSBucket(mongoose.connection.db, {
     bucketName: 'pdfs'
@@ -67,7 +70,6 @@ const DeleteCurriculum = async(req,res) => {
 if (!curriculum){
   throw new NotFoundError(`No se encontro curriculum con el ID: ${fileId}`)
 }
-console.log(curriculum);
   bucket.delete(fileId, err =>{
     if(err) {
       return res.status(500).json({message: "Error al borrar el archivo PDF, por favor vuelva a intentarlo"})

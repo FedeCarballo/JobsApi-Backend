@@ -39,7 +39,7 @@ app.use(express.urlencoded({extended: false}));
 // routes
 app.use('/api/v1/auth', AuthRouter)
 app.use('/api/v1/jobs', authUser, JobsRouter)
-app.use('/api/v1/extras/curriculum',CurriculumRouter)
+app.use('/api/v1/extras/curriculum',authUser, CurriculumRouter)
 
 
 app.use(notFoundMiddleware);

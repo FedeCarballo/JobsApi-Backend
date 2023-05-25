@@ -22,7 +22,8 @@ const GetJob = async (req,res) => {
 const CreateJob = async (req,res) => {
    // Aca asociamos el job al usuario
     req.body.createdBy = req.user.userId
-  
+    console.log(req.body.createdBy);
+    console.log(req.body);
     const job = await Job.create(req.body)
     res.status(StatusCodes.CREATED).json({job})
 }
