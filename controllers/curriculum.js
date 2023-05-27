@@ -63,7 +63,7 @@ const DeleteCurriculum = async(req,res) => {
   const curriculum = await Curriculum.findOneAndDelete({
     file: fileId,
     createdBy: userId,
-  },timeStamp)
+  })
   const bucket = new GridFSBucket(mongoose.connection.db, {
     bucketName: 'pdfs'
 })
