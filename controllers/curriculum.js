@@ -4,7 +4,8 @@ const mime = require('mime-types');
 const {StatusCodes} = require('http-status-codes')
 const {NotFoundError} = require('../errors')
 const {GridFSBucket, ObjectID } = require('mongodb')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { timeStamp } = require('console');
 
 
 const GetCV = async (req,res) => {
@@ -62,7 +63,7 @@ const DeleteCurriculum = async(req,res) => {
   const curriculum = await Curriculum.findOneAndDelete({
     file: fileId,
     createdBy: userId,
-  })
+  },timeStamp)
   const bucket = new GridFSBucket(mongoose.connection.db, {
     bucketName: 'pdfs'
 })
