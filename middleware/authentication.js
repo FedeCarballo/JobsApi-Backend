@@ -8,8 +8,8 @@ const auth = async (req,res, next) => {
         throw new UnauthenticatedError('Authentication Invalid')
     }
     //Hacemos el split y tomamos el segundo valor ya que es el que nos interesa
-    const token = authHeader.split(' ')[1]
-
+    const token = authHeader.split()[1]
+    console.log(token);
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET)
 

@@ -18,7 +18,6 @@ const authUser = require('./middleware/authentication')
 const AuthRouter = require('./routes/auth')
 const JobsRouter = require('./routes/jobs')
 const CurriculumRouter = require('./routes/curriculum')
-
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');

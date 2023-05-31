@@ -1,7 +1,9 @@
 require('dotenv').config()
+const bcrypt = require('bcryptjs')
 const User = require('../models/User')
 const {StatusCodes} = require('http-status-codes')
 const nodemailer = require('nodemailer')
+const jwt = require('jsonwebtoken');
 const {BadRequestError, UnauthenticatedError} = require('../errors')
 const register = async (req,res) => {
     const user = await User.create({...req.body})
@@ -46,7 +48,7 @@ const ReqPassword = async (req,res) => {
         to: email,
         subject: 'Restablecimiento de contraseña',
         text: 'Haz clic en el siguiente enlace para restablecer tu contraseña: ' +
-          `http://localhost:3030/reset-password/${token}`,
+          `http://localhost:3000/api/v1/auth/forgot-password/${token}`,
       };
       transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
@@ -56,8 +58,28 @@ const ReqPassword = async (req,res) => {
         });
     res.status(StatusCodes.OK).json({ message: 'Se ha enviado un correo electrónico para restablecer la contraseña.' })
 }
+const SendPassword = async (req,res) => {
+    const {token} = req.params
+    const {password} = req.body
+    try {
+        // verificamos que exista el user
+        const payload = jwt.verify(token, process.env.JWT_SECRET)
+        //hasheamos la password para enviarlo nuevamente
+        const salt = await bcrypt.genSalt(10)
+        const PasswordHashed = await bcrypt.hash(password, salt)
+        req.user = {userId:payload.userId}
+        if(!PasswordHashed || PasswordHashed == ''){
+            throw new BadRequestError('Por favor rellenar los datos requeridos')
+        }
+        const user = await User.findByIdAndUpdate({_id:req.user.userId},{password: PasswordHashed},{new:true, runValidators: true})
+        res.status(StatusCodes.OK).json({user})
+    } catch (error) {
+        console.log(error);
+    }
+}
 module.exports = {
     register,
     login,
-    ReqPassword
+    ReqPassword,
+    SendPassword
 }
