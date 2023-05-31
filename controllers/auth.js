@@ -35,7 +35,6 @@ const ReqPassword = async (req,res) => {
         throw new UnauthenticatedError('No se encontro un correo registrado')
     }
     const token = user.CreateJWT()
-    
     const transporter = nodemailer.createTransport({
         service:'Gmail',
         auth: {
@@ -44,7 +43,7 @@ const ReqPassword = async (req,res) => {
         }
     })
     const mailOptions = {
-        from: 'tu_correo@gmail.com',
+        from: 'Web Jobs v0.1',
         to: email,
         subject: 'Restablecimiento de contraseña',
         text: 'Haz clic en el siguiente enlace para restablecer tu contraseña: ' +
