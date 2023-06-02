@@ -5,8 +5,6 @@ const {StatusCodes} = require('http-status-codes')
 const {NotFoundError} = require('../errors')
 const {GridFSBucket, ObjectID } = require('mongodb')
 const mongoose = require('mongoose');
-const { timeStamp } = require('console');
-
 
 const GetCV = async (req,res) => {
     const {user:{userId}} = req
@@ -39,7 +37,6 @@ const CreateCV = async (req,res) => {
     const bucket = new GridFSBucket(mongoose.connection.db, {
         bucketName: 'pdfs'
     })
-    console.log(bucket);
     const uploadStream = bucket.openUploadStream(req.file.originalname);
   const readablePdfStream = new Readable();
   readablePdfStream.push(buffer);
@@ -50,7 +47,7 @@ const CreateCV = async (req,res) => {
       title,
       description,
       createdBy: req.body.createdBy,
-      file: uploadStream.id
+      file: uploadStream.id,
     });
 
     await pdf.save();

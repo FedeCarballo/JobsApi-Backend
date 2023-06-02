@@ -10,7 +10,8 @@ const multerUpload = multer({
         else cb(new Error(`only .pdf alowed`))
     },
     limits:{
-        fieldSize: 1000000,
+        //Limitamos el tamaño de Pdf a 6 mb
+        fieldSize: 6 * 1024 * 1024,
     }
 })
 

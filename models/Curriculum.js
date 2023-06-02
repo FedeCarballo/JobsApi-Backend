@@ -7,7 +7,7 @@ const CurriculumSchema = new mongoose.Schema({
     createdBy:{
         type:mongoose.Types.ObjectId,
         ref: 'User',
-        required: [false, 'please provide user']
+        required: [true, 'Por favor ingrese usuario']
     }
 })
 
