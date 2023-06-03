@@ -7,7 +7,7 @@ const PresentationSchema = new mongoose.Schema({
     },createdBy:{
         type:mongoose.Types.ObjectId,
         ref: 'User',
-        required: [true, 'please provide user']
+        required: [true, 'Por favor ingrese usuario']
     }
 })
 

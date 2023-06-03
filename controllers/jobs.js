@@ -14,7 +14,7 @@ const GetJob = async (req,res) => {
         createdBy:userId 
     })
     if(!job){
-        throw new NotFoundError(`Not job with ${JobId}`)
+        throw new NotFoundError(`No se encontro puesto con el id: ${JobId}`)
     }
     res.status(StatusCodes.OK).json({job})
 }
@@ -22,8 +22,6 @@ const GetJob = async (req,res) => {
 const CreateJob = async (req,res) => {
    // Aca asociamos el job al usuario
     req.body.createdBy = req.user.userId
-    console.log(req.body.createdBy);
-    console.log(req.body);
     const job = await Job.create(req.body)
     res.status(StatusCodes.CREATED).json({job})
 }
@@ -36,12 +34,12 @@ const UpdateJob = async (req,res) => {
         = req
 
     if(company === '' || position=== ''){
-        throw new BadRequestError('Company or position fields cannot be empty')
+        throw new BadRequestError('Por favor rellene los datos solicitados')
     }
 
     const job = await Job.findByIdAndUpdate({_id:JobId, createdBy:userId}, req.body,{new:true, runValidators: true})
     if(!job){
-        throw new NotFoundError(`Not job with ${JobId}`)
+        throw new NotFoundError(`No se encontro puesto con el id: ${JobId}`)
     }
     res.status(StatusCodes.OK).json({job})
 }
@@ -55,7 +53,7 @@ const DeleteJob = async (req,res) => {
         createdBy:userId,
     })
     if(!job){
-        throw new NotFoundError(`Not job with ${JobId}`)
+        throw new NotFoundError(`No se encontro puesto con el id: ${JobId}`)
     }
     res.status(StatusCodes.OK).send()
 }

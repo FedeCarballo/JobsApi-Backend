@@ -3,10 +3,10 @@ const {StatusCodes} = require('http-status-codes')
 const {BadRequestError, NotFoundError} = require('../errors')
 
 const CreateLetter = async (req,res) =>{
-    req.body.createdBy = req.body.userId
-    
+    req.body.createdBy = req.user.userId
+    console.log(req.body.createdBy);
     const letter = await Letter.create(req.body)
-    res.status(StatusCodes.CREATED).json({Letter})
+    res.status(StatusCodes.CREATED).json({letter})
 }
 const GetLetter = async(req,res) => {
     const {user:{userId},params:{id:LetterId}} = req

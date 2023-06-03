@@ -7,6 +7,7 @@ const {
         UpdateLetter,
         DeleteLetter} = require('../controllers/coverLetter')
 
-router.route('/:id').post(CreateLetter).get(GetLetter).delete(DeleteLetter).patch(UpdateLetter)
+router.route('/').post(CreateLetter)
+router.route('/:id').get(GetLetter).delete(DeleteLetter).patch(UpdateLetter)
 
 module.exports = router
