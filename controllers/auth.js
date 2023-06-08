@@ -28,6 +28,10 @@ const login = async (req,res) => {
     const token = user.CreateJWT()
     res.status(StatusCodes.OK).json({user:{name: user.name}, token})
 }
+
+const logout = async (req,res) => {
+    res.status(StatusCodes.OK).json({message: 'sesion cerrada correctamente'})
+}
 const ReqPassword = async (req,res) => {
     const { email } = req.body;
     const user = await User.findOne({ email })
@@ -79,5 +83,5 @@ module.exports = {
     register,
     login,
     ReqPassword,
-    SendPassword
-}
+    SendPassword,
+    logout}
