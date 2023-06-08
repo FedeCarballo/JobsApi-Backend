@@ -28,7 +28,6 @@ const login = async (req,res) => {
     const token = user.CreateJWT()
     res.status(StatusCodes.OK).json({user:{name: user.name}, token})
 }
-
 const logout = async (req,res) => {
     res.status(StatusCodes.OK).json({message: 'sesion cerrada correctamente'})
 }
